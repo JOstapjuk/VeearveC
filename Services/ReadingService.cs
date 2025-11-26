@@ -31,13 +31,13 @@ namespace Veearve.Services
             var filterBuilder = Builders<Reading>.Filter;
             var filters = new List<FilterDefinition<Reading>>();
 
-            // Non-admin users can only see their own readings
+            // Mitteadministraatorid saavad näha ainult oma näiteid.
             if (role != "admin")
             {
                 filters.Add(filterBuilder.Eq(r => r.UserId, userId));
             }
 
-            // Date range filter
+            // Kuupäevade vahemiku filter
             if (startDate.HasValue)
             {
                 filters.Add(filterBuilder.Gte(r => r.Date, startDate.Value));
@@ -69,7 +69,7 @@ namespace Veearve.Services
                 throw new Exception("Reading not found");
             }
 
-            // Check access permissions
+            // Kontrolli juurdepääsuõigusi
             if (role != "admin" && reading.UserId != userId)
             {
                 throw new UnauthorizedAccessException("Access denied");
@@ -114,7 +114,7 @@ namespace Veearve.Services
             if (dto.IsPaid.HasValue)
                 updates.Add(updateDefinition.Set(r => r.IsPaid, dto.IsPaid.Value));
 
-            // Recalculate amount if water values changed
+            // Kui vee väärtused on muutunud, arvuta summa uuesti
             if (dto.ColdWater.HasValue || dto.HotWater.HasValue)
             {
                 var coldWater = dto.ColdWater ?? reading.ColdWater;

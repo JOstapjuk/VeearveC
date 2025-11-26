@@ -70,10 +70,10 @@ namespace Veearve.Services
 
         public async Task DeleteUserAsync(string userId)
         {
-            // Delete user
+            // Kustuta kasutaja
             await _context.Users.DeleteOneAsync(u => u.Id == userId);
 
-            // Delete all readings by this user
+            // Kustuta kõik selle kasutaja lugemid
             await _context.Readings.DeleteManyAsync(r => r.UserId == userId);
         }
 
@@ -81,16 +81,16 @@ namespace Veearve.Services
         {
             var user = await GetUserByIdAsync(userId);
 
-            // Verify current password
+            // Kinnita praegune parool
             if (!BCrypt.Net.BCrypt.Verify(changePasswordDto.CurrentPassword, user.Password))
             {
                 throw new Exception("Current password is incorrect");
             }
 
-            // Hash new password
+            // Uue parooli hash
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(changePasswordDto.NewPassword);
 
-            // Update password
+            // Parooli uuendamine
             var updateDefinition = Builders<User>.Update.Set("password", hashedPassword);
             await _context.Users.UpdateOneAsync(u => u.Id == userId, updateDefinition);
         }

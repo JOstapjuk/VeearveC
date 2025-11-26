@@ -171,12 +171,12 @@ namespace Veearve.Services
                 mailMessage.To.Add(to);
 
                 await client.SendMailAsync(mailMessage);
-                _logger.LogInformation($"✅ Email sent to: {to}");
+                _logger.LogInformation($"Email sent to: {to}");
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Error sending email to {to}: {ex.Message}");
+                _logger.LogError($"Error sending email to {to}: {ex.Message}");
                 return false;
             }
         }

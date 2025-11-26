@@ -31,7 +31,7 @@ namespace Veearve.Services
 
         public async Task<LoginResponseDto> RegisterAsync(RegisterDto registerDto)
         {
-            // Check if user already exists
+            // Kontrolli, kas kasutaja juba eksisteerib
             var existingUser = await _context.Users
                 .Find(u => u.Email == registerDto.Email)
                 .FirstOrDefaultAsync();
@@ -41,10 +41,10 @@ namespace Veearve.Services
                 throw new Exception("User already exists");
             }
 
-            // Hash password
+            // Hash-parool
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
 
-            // Create user
+            // Loo kasutaja
             var user = new User
             {
                 Email = registerDto.Email,
@@ -56,7 +56,7 @@ namespace Veearve.Services
 
             await _context.Users.InsertOneAsync(user);
 
-            // Generate token
+            // Token'i genereerimine
             var token = GenerateJwtToken(user);
 
             return new LoginResponseDto

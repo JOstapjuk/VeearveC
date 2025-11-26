@@ -26,7 +26,7 @@ namespace Veearve.Services
             var filterBuilder = Builders<Reading>.Filter;
             var filter = filterBuilder.Eq(r => r.IsPaid, false);
 
-            // Non-admin users only see their own unpaid bills
+            // Mitteadministraatorid näevad ainult oma maksmata arveid.
             if (role != "admin")
             {
                 filter = filterBuilder.And(
@@ -62,7 +62,7 @@ namespace Veearve.Services
                 filterBuilder.Lte(r => r.Date, endDate)
             );
 
-            // Non-admin users only see their own data
+            // Mitteadministraatorid näevad ainult oma andmeid
             if (role != "admin")
             {
                 filter = filterBuilder.And(
